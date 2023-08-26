@@ -4,9 +4,7 @@ from numba import njit
 
 
 @njit(cache=True)
-def explicit_euler(
-    f: Callable, x: np.ndarray, y: np.ndarray, iterations: int, h: float
-) -> np.ndarray:
+def explicit_euler(f, x, y, iterations, h) -> np.ndarray:
     for i in range(iterations):
         yi = y[i, :]
         y[i + 1, :] = yi + h * f(x[i + 1], yi)
@@ -69,19 +67,9 @@ def runge_kutta_4(x: np.ndarray, y: np.ndarray, f: Callable, n: int, h: float):
 
 
 @njit(cache=True)
-def apply(method: str, f: Callable, y0: np.ndarray, a: float, b: float, n: int):
+def applier(method: str, f: Callable, y0: np.ndarray, a: float, b: float, n: int):
     h = (b - a) / n
     x = np.arange(a, b + h, h)
     y = np.zeros((len(x), len(y0)))
     y[0, :] = y0
-
-    if method == "Euler Explícito":
-        return x, explicit_euler(x, y, f, n, h)
-    elif method == "Euler Implícito":
-        return x, implicit_euler(x, y, f, n, h)
-    elif method == "Pto. Médio Mod.":
-        return x, modified_midpoint(x, y, f, n, h)
-    elif method == "Runge-Kutta 3":
-        return x, runge_kutta_3(x, y, f, n, h)
-    else:
-        return x, runge_kutta_4(x, y, f, n, h)
+    return x, explicit_euler(f, x, y, n, h)

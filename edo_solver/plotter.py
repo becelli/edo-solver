@@ -1,4 +1,5 @@
 from cmath import isclose
+from typing import Callable
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -13,7 +14,7 @@ class Plotter2D:
     def plot_bar(self, value, l: str = "?"):
         plt.bar(l, value)
 
-    def plot_approximations(self, methods=[], F: callable = None) -> None:
+    def plot_approximations(self, methods=[], F: Callable | None = None) -> None:
         if F is None:
             self._plot_only_numerical_method(methods)
         else:
